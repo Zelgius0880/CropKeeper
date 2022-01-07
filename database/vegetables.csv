@@ -1,0 +1,71 @@
+Artichoke,3,5,Sow indoors
+Artichoke,5,8,Plant out
+Artichoke,7,11,Harvest
+Asparagus,3,4,Plant out
+Asparagus,4.5,6.5,Harvest
+Aubergine,3,3.5,Sow indoors
+Aubergine,5.5,6.5,Plant out
+Aubergine,7.5,10,Harvest
+Beetroot,3,7.5,Sow outdoors
+Beetroot,6.5,10.5,Harvest
+Beans,2.5,5.5,Sow outdoors
+Beans,7,10,Harvest
+Broccoli,3,4.25,Sow indoors
+Broccoli,4.25,5.75,Plant out
+Broccoli,6.5,9.5,Harvest
+Brussels Sprouts,8.5,2.5,Harvest
+Brussels Sprouts,3,4.25,Sow indoors
+Brussels Sprouts,5.5,6.25,Plant out
+Butternut Squash,4,5.5,Sow indoors
+Butternut Squash,6,6.5,Plant out
+Butternut Squash,9,11,Harvest
+Carrot,4,7,Sow outdoors
+Carrot,7,11,Harvest
+Cauliflower,4,6,Sow outdoors
+Cauliflower,9.5,12,Harvest
+Celery,3.5,4.5,Sow indoors
+Celery,5.5,6.5,Plant out
+Celery,10,2,Harvest
+Chard,4,7,Sow outdoors
+Chard,8,12,Harvest
+Chilly,2,5,Sow indoors
+Chilly,7,10.5,Harvest
+Courgette,4.5,5.5,Sow indoors
+Courgette,5.75,6.5,Plant out
+Courgette,7,11,Harvest
+Cucumber,2.25,3.75,Sow indoors
+Cucumber,6.5,10,Harvest
+Garlic,10,2,Plant out
+Garlic,6,9,Harvest
+Leek,3.5,4.5,Sow indoors
+Leek,6,7,Plant out
+Leek,11,3,Harvest
+Lettuce,3.5,7.5,Sow outdoors
+Lettuce,6.5,10.5,Harvest
+Onion,3,4.5,Sow outdoors
+Onion,7.5,10,Harvest
+Parsnip,2.75,4.5,Sow outdoors
+Parsnip,11,3,Harvest
+Pea,3,7,Sow outdoors
+Pea,6.5,10.25,Harvest
+Pepper,3,4.5,Sow indoors
+Pepper,5,6,Plant out
+Pepper,7,10,Harvest
+Potato,4.75,5,Plant out
+Potato,6.75,10,Harvest
+Pumpkin,5.5,6.5,Sow outdoors
+Pumpkin,6.5,10.5,Harvest
+Radish,3.5,6,Sow outdoors
+Radish,5.5,9,Harvest
+Shallot,3.5,4.5,Plant out
+Shallot,6.75,9.25,Harvest
+Spinach (Summer),3.5,6,Sow outdoors
+Spinach (Summer),6,11,Harvest
+Spinach (Winter),8,10,Sow indoors
+Spinach (Winter),10,4,Harvest
+Tomato (Green house),3,3.5,Sow indoors
+Tomato (Green house),4.5,5.5,Plant out
+Tomato (Green house),7,10.5,Harvest
+Tomato (Outdoors),3.5,4.5,Sow indoors
+Tomato (Outdoors),5.5,6.5,Plant out
+Tomato (Outdoors),8.5,10,Harvest
