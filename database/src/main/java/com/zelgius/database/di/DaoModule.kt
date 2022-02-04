@@ -30,4 +30,8 @@ class DaoModule {
     @Singleton
     @Provides
     fun providePhaseDao(db: AppDatabase): PhaseDao = db.phaseDao()
+
+    @Singleton
+    @Provides
+    fun provideFullVegetableDao(db: AppDatabase): FullVegetableDao = db.fullVegetableDao()
 }

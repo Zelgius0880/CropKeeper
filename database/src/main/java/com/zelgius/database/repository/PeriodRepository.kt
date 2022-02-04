@@ -40,19 +40,27 @@ class PeriodRepository @Inject constructor(
                 map {
                     PeriodWithPhaseAndHistory(phase = it.phase,
                         period = it.period,
-                        periodHistories = listOf(
-                            PeriodHistory(
-                                startDate = LocalDate.now()
-                                    .withDayOfYear(it.periodHistories.sumOf { h -> h.startDate.dayOfYear } / it.periodHistories.size),
-                                endDate = LocalDate.now()
-                                    .withDayOfYear(it.periodHistories.sumOf { h -> h.endDate.dayOfYear } / it.periodHistories.size),
-                                periodUid = it.period.periodUid
+                        periodHistories = if (it.periodHistories.isNotEmpty()) {
+                            listOf(
+                                PeriodHistory(
+                                    startDate = LocalDate.now()
+                                        .withDayOfYear(it.periodHistories.sumOf { h -> h.startDate.dayOfYear } / it.periodHistories.size),
+                                    endDate = LocalDate.now()
+                                        .withDayOfYear(it.periodHistories.sumOf { h -> h.endDate.dayOfYear } / it.periodHistories.size),
+                                    periodUid = it.period.periodUid
+                                )
                             )
-                        ))
+                        } else emptyList())
                 }
             }
         }
 
-    suspend fun getPeriodsForVegetable(vegetable: Vegetable) =
-        periodDao.getPeriodWithPhaseForVegetable(vegetable.vegetableUid)
+    suspend fun getPeriodsForVegetable(vegetable: Vegetable) = coroutineScope {
+        periodDao.getPeriodsForVegetable(vegetable.vegetableUid).map {
+            PeriodWithPhase(
+                period = it,
+                phase = phaseDao.get(it.phaseUid)
+            )
+        }
+    }
 }

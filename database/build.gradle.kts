@@ -6,6 +6,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -58,6 +59,7 @@ kapt {
 dependencies {
 
     implementation("androidx.core:core-ktx:1.7.0")
+    implementation( project(":common"))
 
     implementation("androidx.room:room-runtime:${Versions.room}")
 
@@ -65,7 +67,7 @@ dependencies {
     kapt("androidx.room:room-compiler:${Versions.room}")
     api("androidx.room:room-ktx:${Versions.room}")
 
-    api("androidx.room:room-paging:2.4.0")
+    api("androidx.room:room-paging:2.4.1")
 
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.hilt}")

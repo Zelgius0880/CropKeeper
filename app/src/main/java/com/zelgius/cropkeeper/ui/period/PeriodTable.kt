@@ -6,10 +6,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -20,25 +20,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstrainedLayoutReference
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintLayoutScope
+import androidx.constraintlayout.compose.Dimension
 import com.zelgius.cropkeeper.ui.Sample
-import com.zelgius.cropkeeper.ui.getStringByName
-import com.zelgius.cropkeeper.ui.history.periodWithHistorySample
-import com.zelgius.cropkeeper.ui.legacy.Divider3
 import com.zelgius.cropkeeper.ui.phase.phaseSample
+import com.zelgius.cropkeeper.ui.phase.string
 import com.zelgius.cropkeeper.ui.theme.AppTheme
 import com.zelgius.cropkeeper.ui.theme.toColor
 import com.zelgius.cropkeeper.ui.theme.toPx
-import com.zelgius.database.dao.fake.FakeProvider
 import com.zelgius.database.model.Period
-import com.zelgius.database.model.PeriodHistory
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.PeriodWithPhaseAndHistory
+import com.zelgius.mock.dao.FakeProvider
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.Year
@@ -47,8 +48,13 @@ import kotlin.random.Random
 import java.time.format.TextStyle as DateTextStyle
 
 private const val CELL_WIDTH = 60
-private const val CELL_HEIGHT = 12
+private const val CELL_HEIGHT = 16
 private const val HEADER_WIDTH = 100
+
+// FIXME On my Pixel 5 Api 32, the text does not want to wrap to a new line when too long. It works well on Emulator. So a dirty fix is to fix the height of the Text
+private val PHASE_NAME_HEIGHT
+@Composable
+get() =  LocalDensity.current.run {  60.sp.toDp() }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -66,22 +72,25 @@ fun PeriodList(periods: List<PeriodWithPhase>, lazy: Boolean = true) = PeriodLis
 @Composable
 fun PeriodListWithHistory(periods: List<PeriodWithPhaseAndHistory>, lazy: Boolean = true) {
     PeriodTableWithHistory(periods, lazy = lazy) {
-        val text = LocalContext.current.getStringByName(it.phase.stringResource)
-            ?: it.phase.name
+        val text = it.phase.string(LocalContext.current)
 
-        Row(Modifier.height(IntrinsicSize.Min)) {
+        Row(Modifier.height(IntrinsicSize.Max)) {
             Card(
                 shape = RoundedCornerShape(0f),
                 backgroundColor = MaterialTheme.colorScheme.surfaceVariant,
+                modifier = Modifier.height(PHASE_NAME_HEIGHT),
             ) {
-                Text(
-                    text = text,
-                    color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant),
-                    modifier = Modifier
-                        .width(100.dp)
-                        .fillMaxHeight()
-                        .padding(vertical = 4.dp, horizontal = 8.dp)
-                )
+                Box(modifier = Modifier.fillMaxHeight()) {
+                    Text(
+                        text = text,
+                        color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant),
+                        modifier = Modifier
+                            .width(HEADER_WIDTH.dp)
+                            .align(Alignment.CenterStart)
+                            .padding(horizontal = 8.dp),
+                        style = MaterialTheme.typography.bodyLarge,
+                    )
+                }
             }
 
             Box(
@@ -154,12 +163,14 @@ fun PeriodTableScope.MonthHeader() {
     ConstraintLayout {
         Row(
             horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.padding(vertical = 8.dp)
         ) {
             var date = LocalDate.now().withMonth(1)
             for (i in 1..12) {
                 Box(modifier = Modifier.width(cellWidth.dp)) {
                     Text(
                         text = date.month.getDisplayName(DateTextStyle.SHORT, Locale.getDefault()),
+                        style = MaterialTheme.typography.labelLarge,
                         color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surfaceVariant),
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -213,7 +224,7 @@ fun PeriodTableScope.PeriodRange(
 
             for (i in 1..11) {
                 Spacer(modifier = Modifier.width(cellWidth.dp - 1.dp))
-                Divider3(
+                Divider(
                     Modifier
                         .fillMaxHeight()
                         .width(1.dp)
@@ -269,7 +280,7 @@ private fun ConstraintLayoutScope.periodBar(
     previous: ConstrainedLayoutReference? = null,
     last: Boolean = true
 ): ConstrainedLayoutReference {
-    val cellHeight = if(previous == null) CELL_HEIGHT
+    val cellHeight = if (previous == null) CELL_HEIGHT
     else CELL_HEIGHT / 2
     return if (starting > ending) {
         val ref = createRef()
@@ -279,6 +290,7 @@ private fun ConstraintLayoutScope.periodBar(
                 .constrainAs(ref) {
 
                     start.linkTo(parent.start, margin = starting.toCell())
+                    end.linkTo(parent.end, margin = 0.dp)
                     if (last && previous == null) {
                         top.linkTo(parent.top)
                         bottom.linkTo(parent.bottom)
@@ -288,10 +300,11 @@ private fun ConstraintLayoutScope.periodBar(
                         top.linkTo(previous.bottom, margin = 2.dp)
                         if (last) bottom.linkTo(parent.bottom, margin = 4.dp)
                     }
+
+                    width = Dimension.value((12 - starting).toCell())
                 }
                 .background(color)
                 .height(cellHeight.dp)
-                .requiredWidth((12 - starting).toCell())
         )
 
         Box(
@@ -300,10 +313,12 @@ private fun ConstraintLayoutScope.periodBar(
                 .background(color)
                 .constrainAs(createRef()) {
                     start.linkTo(parent.start)
+                    end.linkTo(parent.end, margin = (12 - ending).toCell())
                     top.linkTo(ref.top)
                     bottom.linkTo(ref.bottom)
+                    width = Dimension.value((ending).toCell())
+
                 }
-                .requiredWidth((ending).toCell())
                 .height(cellHeight.dp)
 
         )
@@ -315,7 +330,7 @@ private fun ConstraintLayoutScope.periodBar(
             modifier = Modifier
                 .clip(RoundedCornerShape(percent = 50))
                 .constrainAs(ref) {
-                    start.linkTo(parent.start, margin = starting.toCell())
+                    start.linkTo(parent.start, margin = (starting).toCell())
                     end.linkTo(parent.end, margin = (12 - ending).toCell())
 
                     if (last && previous == null) {
@@ -327,9 +342,8 @@ private fun ConstraintLayoutScope.periodBar(
                         top.linkTo(previous.bottom, margin = 2.dp)
                         if (last) bottom.linkTo(parent.bottom, margin = 4.dp)
                     }
-
+                    width = Dimension.value((ending - starting).toCell())
                 }
-                .requiredWidth((ending - starting).toCell())
                 .height(cellHeight.dp)
                 .background(color)
         )
@@ -392,7 +406,7 @@ fun PreviewPeriodWithHistory() {
     val periods = runBlocking {
         FakeProvider.periodRepository.getPeriodWithHistoryForYear(
             FakeProvider.periodRepository.getPeriodsForVegetable(
-                FakeProvider.vegetableRepository.getAll().first()
+                FakeProvider.vegetableRepository.getAll().first().first()
             ),
             2015
         )

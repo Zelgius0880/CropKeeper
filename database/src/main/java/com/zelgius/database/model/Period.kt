@@ -20,6 +20,7 @@ import java.util.*
         )],
     indices = [Index("phase_uid"), Index("vegetable_uid")]
 )
+
 data class Period(
     @ColumnInfo(name = "period_uid")
     @PrimaryKey val periodUid: String = UUID.randomUUID().toString(),

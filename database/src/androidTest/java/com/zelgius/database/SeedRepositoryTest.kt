@@ -34,7 +34,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun insertAndGet() {
         runBlocking {
-            repository.insert(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE)
             val list = repository.getAll()
             assertTrue(list.isNotEmpty())
             assertArrayEquals(list.toTypedArray(), SAMPLE)
@@ -44,7 +44,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun delete() {
         runBlocking {
-            repository.insert(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE)
 
             repository.delete(*SAMPLE.sliceArray(0..1))
 
@@ -56,7 +56,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun update() {
         runBlocking {
-            repository.insert(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE)
 
             val updated =
                 SAMPLE.map { it.copy(startDate = it.startDate.plusDays(Random.nextLong(10))) }

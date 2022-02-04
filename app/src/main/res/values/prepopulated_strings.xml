@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="artichoke">Artichoke</string>
+    <string name="asparagus">Asparagus</string>
+    <string name="aubergine">Aubergine</string>
+    <string name="beans">Beans</string>
+    <string name="beetroot">Beetroot</string>
+    <string name="broccoli">Broccoli</string>
+    <string name="brussels_sprouts">Brussels sprouts</string>
+    <string name="butternut_squash">Butternut squash</string>
+    <string name="carrot">Carrot</string>
+    <string name="cauliflower">Cauliflower</string>
+    <string name="celery">Celery</string>
+    <string name="chard">Chard</string>
+    <string name="chilly">Chilly</string>
+    <string name="courgette">Courgette</string>
+    <string name="cucumber">Cucumber</string>
+    <string name="garlic">Garlic</string>
+    <string name="leek">Leek</string>
+    <string name="lettuce">Lettuce</string>
+    <string name="onion">Onion</string>
+    <string name="parsnip">Parsnip</string>
+    <string name="pea">Pea</string>
+    <string name="pepper">Pepper</string>
+    <string name="potato">Potato</string>
+    <string name="pumpkin">Pumpkin</string>
+    <string name="radish">Radish</string>
+    <string name="shallot">Shallot</string>
+    <string name="spinach_summer">Spinach (summer)</string>
+    <string name="spinach_winter">Spinach (winter)</string>
+    <string name="tomato_outdoors">Tomato (outdoors)</string>
+    <string name="tomato_green_house">Tomato (green house)</string>
+
+    <string name="sow_indoors">Sow Indoors</string>
+    <string name="sow_outdoors">Sow Outdoors</string>
+    <string name="harvest">Harvest</string>
+    <string name="plant_out">Plant out</string>
+</resources>

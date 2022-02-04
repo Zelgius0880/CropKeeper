@@ -1,11 +1,12 @@
 package com.zelgius.database.dao
 
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import com.zelgius.database.model.Phase
 
 @Dao
 interface PhaseDao {
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun insert(vararg phases: Phase)
 
     @Update

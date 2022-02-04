@@ -3,6 +3,7 @@ package com.zelgius.cropkeeper.di
 import android.content.Context
 import androidx.room.Room
 import com.zelgius.database.AppDatabase
+import com.zelgius.database.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,7 +14,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModule {
-    @Singleton // Tell Dagger-Hilt to create a singleton accessible everywhere in ApplicationCompenent (i.e. everywhere in the application)
+    @Singleton
     @Provides
     fun provideDatabase(
         @ApplicationContext app: Context
@@ -21,5 +22,5 @@ class AppModule {
         app,
         AppDatabase::class.java,
         "crop_keeper_db"
-    ).build()
+    ).createFromAsset("initial_db.db").build()
 }

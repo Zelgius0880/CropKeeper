@@ -1,10 +1,8 @@
-package com.zelgius.database.dao.fake
+package com.zelgius.mock.dao
 
-import com.zelgius.database.dao.PeriodDao
 import com.zelgius.database.dao.PeriodHistoryDao
 import com.zelgius.database.model.*
-import java.time.LocalDate
-import kotlin.random.Random
+import com.zelgius.mock.periodSampleWithPhaseAndHistorySample
 
 class FakePeriodHistoryDao : PeriodHistoryDao {
     override suspend fun insert(vararg history: PeriodHistory) {}

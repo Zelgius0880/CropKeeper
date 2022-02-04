@@ -1,4 +1,4 @@
-package com.zelgius.database.dao.fake
+package com.zelgius.mock
 
 import android.graphics.Color
 import com.zelgius.database.model.*
@@ -9,28 +9,28 @@ import kotlin.random.Random
 
 val phaseColorSet
     get() = listOf(
-        0xB71C1C,
-        0x880E4F,
-        0x4A148C,
-        0x311B92,
-        0x1A237E,
-        0x0D47A1,
-        0x01579B,
-        0x006064,
-        0x004D40,
-        0x1B5E20,
-        0x33691E,
-        0x827717,
-        0xF57F17,
-        0xFF6F00,
-        0xE65100,
-        0xBF360C,
+        "#B71C1C",
+        "#880E4F",
+        "#4A148C",
+        "#311B92",
+        "#1A237E",
+        "#0D47A1",
+        "#01579B",
+        "#006064",
+        "#004D40",
+        "#1B5E20",
+        "#33691E",
+        "#827717",
+        "#F57F17",
+        "#FF6F00",
+        "#E65100",
+        "#BF360C",
     )
 
 val phaseSample = (1..5).map {
     Phase(
         name = "${if (it == 5) "Long Phase" else "Phase"} $it",
-        color = Color.valueOf(phaseColorSet.random()).toArgb()
+        color = phaseColorSet.random()
     )
 }
 val vegetableSample = (1..5).map {

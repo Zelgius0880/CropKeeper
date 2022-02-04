@@ -21,6 +21,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun phaseDao(): PhaseDao
     abstract fun periodDao(): PeriodDao
     abstract fun periodHistoryDao(): PeriodHistoryDao
+    abstract fun fullVegetableDao(): FullVegetableDao
 }
 
 
@@ -34,14 +35,4 @@ class Converters {
     fun dateToNullableString(date: LocalDate?): String? {
         return date?.format(DateTimeFormatter.ISO_LOCAL_DATE)
     }
-
-/*    @TypeConverter
-    fun fromString(value: String): LocalDate {
-        return value.let { LocalDate.parse(it) }
-    }
-
-    @TypeConverter
-    fun dateToString(date: LocalDate): String {
-        return date.format(DateTimeFormatter.ISO_LOCAL_DATE)
-    }*/
 }

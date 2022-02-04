@@ -1,10 +1,11 @@
-package com.zelgius.database.dao.fake
+package com.zelgius.mock.dao
 
 import com.zelgius.database.dao.PeriodDao
 import com.zelgius.database.model.Period
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.PeriodWithPhaseAndHistory
-import kotlin.random.Random
+import com.zelgius.mock.periodSample
+import com.zelgius.mock.periodSampleWithPhaseAndHistorySample
 
 class FakePeriodDao : PeriodDao {
     override suspend fun insert(vararg periods: Period) {}
@@ -28,7 +29,7 @@ class FakePeriodDao : PeriodDao {
             .map { it.startDate.year }
             .distinct()
 
-    override suspend fun getPeriodWithPhaseForVegetable(vegetableUid: String): List<PeriodWithPhase> =
-        periodSample.filter { it.period.vegetableUid == vegetableUid }
+    override suspend fun getPeriodsForVegetable(vegetableUid: String): List<Period> =
+        periodSample.filter { it.period.vegetableUid == vegetableUid }.map { it.period }
 
 }

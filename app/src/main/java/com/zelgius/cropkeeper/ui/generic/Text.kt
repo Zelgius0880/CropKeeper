@@ -53,7 +53,7 @@ fun TagText(
                     it.clickable { onClickListener() }
                 } else it
             }
-            .padding(horizontal = 8.dp, vertical = 2.dp),
+            .padding(horizontal = 8.dp, vertical = 8.dp),
     )
 }
 

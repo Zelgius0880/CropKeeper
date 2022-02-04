@@ -62,20 +62,35 @@ dependencies {
     implementation( "androidx.core:core-ktx:1.7.0")
     implementation( "androidx.compose.ui:ui:${Versions.compose}")
     implementation( "androidx.compose.material:material:${Versions.compose}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha02")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha04")
     implementation( "androidx.compose.ui:ui-tooling-preview:${Versions.compose}")
     implementation( "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
     implementation( "androidx.activity:activity-compose:1.4.0")
     implementation( project(":database"))
+    implementation( project(":common"))
+    implementation( project(":mock"))
+
+    //For RangeSlider. The compose range slider is more limited in customization than the Android view
+    implementation ("com.google.android.material:material:1.5.0")
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycle}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifeCycle}")
     implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
+    implementation ("androidx.compose.animation:animation:${Versions.compose}")
 
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.0-rc02")
+
+    //implementation("androidx.navigation:navigation-compose:2.5.0-alpha01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+
+    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.0")
 
     implementation("com.google.dagger:hilt-android:${Versions.hilt}")
     kapt("com.google.dagger:hilt-android-compiler:${Versions.hilt}")
+
+    implementation("org.burnoutcrew.composereorderable:reorderable:0.7.4")
+
+
+    //implementation( "com.google.accompanist:accompanist-navigation-animation:0.22.0-rc")
 
     testImplementation( "junit:junit:4.13.2")
     androidTestImplementation( "androidx.test.ext:junit:1.1.3")

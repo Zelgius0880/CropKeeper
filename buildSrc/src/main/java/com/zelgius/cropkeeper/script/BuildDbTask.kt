@@ -13,8 +13,9 @@ open class BuildDbTask : DefaultTask() {
     @TaskAction
     fun run() {
         Class.forName("org.sqlite.JDBC")
-        val file = project.file("/src/main/assets/initial_db.db")
+        val file = project.rootProject.project(":app").file("/src/main/assets/initial_db.db")
         if (file.exists()) file.delete()
+        if(!file.parentFile.exists()) file.parentFile.mkdirs()
         file.createNewFile()
 
         var connection: Connection? = null

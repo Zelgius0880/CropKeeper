@@ -63,46 +63,55 @@ val seed = Color(0xFF33691e)
 val error = Color(0xFFba1b1b)
 
 
-val phaseColorSetLight
-    get() = listOf(
-        Color(0xFFD50000),
-        Color(0xFFC51162),
-        Color(0xFFAA00FF),
-        Color(0xFF6200EA),
-        Color(0xFF304FFE),
-        Color(0xFF2962FF),
-        Color(0xFF0091EA),
-        Color(0xFF00B8D4),
-        Color(0xFF00BFA5),
-        Color(0xFF00C853),
-        Color(0xFF64DD17),
-        Color(0xFFAEEA00),
-        Color(0xFFFFD600),
-        Color(0xFFFFAB00),
-        Color(0xFFFF6D00),
-        Color(0xFFDD2600),
-    )
+val phaseColorSetLight = listOf(
+    Color(0xFFD50000),
+    Color(0xFFC51162),
+    Color(0xFFAA00FF),
+    Color(0xFF6200EA),
+    Color(0xFF304FFE),
+    Color(0xFF2962FF),
+    Color(0xFF0091EA),
+    Color(0xFF00B8D4),
+    Color(0xFF00BFA5),
+    Color(0xFF00C853),
+    Color(0xFF64DD17),
+    Color(0xFFAEEA00),
+    Color(0xFFFFD600),
+    Color(0xFFFFAB00),
+    Color(0xFFFF6D00),
+    Color(0xFFDD2600),
+)
 
-val phaseColorSetDark
-    get() = listOf(
-        Color(0xFFB71C1C),
-        Color(0xFF880E4F),
-        Color(0xFF4A148C),
-        Color(0xFF311B92),
-        Color(0xFF1A237E),
-        Color(0xFF0D47A1),
-        Color(0xFF01579B),
-        Color(0xFF006064),
-        Color(0xFF004D40),
-        Color(0xFF1B5E20),
-        Color(0xFF33691E),
-        Color(0xFF827717),
-        Color(0xFFF57F17),
-        Color(0xFFFF6F00),
-        Color(0xFFE65100),
-        Color(0xFFBF360C),
-    )
+val phaseColorSetDark = listOf(
+    Color(0xFFB71C1C),
+    Color(0xFF880E4F),
+    Color(0xFF4A148C),
+    Color(0xFF311B92),
+    Color(0xFF1A237E),
+    Color(0xFF0D47A1),
+    Color(0xFF01579B),
+    Color(0xFF006064),
+    Color(0xFF004D40),
+    Color(0xFF1B5E20),
+    Color(0xFF33691E),
+    Color(0xFF827717),
+    Color(0xFFF57F17),
+    Color(0xFFFF6F00),
+    Color(0xFFE65100),
+    Color(0xFFBF360C),
+)
 
 val ColorScheme.phaseColorSet
     @Composable
     get() = if (!isSystemInDarkTheme()) phaseColorSetLight else phaseColorSetDark
+
+
+@Composable
+fun String.toColor() = with(android.graphics.Color.parseColor(this)) {
+    val color = Color(this)
+    (if (isSystemInDarkTheme()) phaseColorSetLight else phaseColorSetDark).indexOfFirst { it.red == color.red && it.blue == color.blue && it.green == it.green }
+        .let {
+            if (it >= 0) MaterialTheme.colorScheme.phaseColorSet[it]
+            else color
+        }
+}

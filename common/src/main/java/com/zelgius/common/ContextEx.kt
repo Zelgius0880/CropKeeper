@@ -1,4 +1,4 @@
-package com.zelgius.cropkeeper.ui
+package com.zelgius.common
 
 import android.content.Context
 

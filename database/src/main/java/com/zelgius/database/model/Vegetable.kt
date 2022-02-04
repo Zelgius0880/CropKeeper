@@ -16,23 +16,3 @@ data class Vegetable(
     @ColumnInfo(name = "string_resource")
     val stringResource: String? = null
 )
-
-
-data class VegetableWithPeriod(
-    @Embedded val vegetable: Vegetable,
-    @Relation(
-        parentColumn = "vegetable_uid",
-        entityColumn = "vegetable_uid"
-    )
-    val periods: List<PeriodWithPhase>
-)
-
-data class FullVegetable(
-    @Embedded val vegetable: Vegetable,
-
-    @Relation(
-        parentColumn = "vegetable_uid",
-        entityColumn = "vegetable_uid"
-    )
-    val periods: List<PeriodWithPhaseAndHistory>
-)

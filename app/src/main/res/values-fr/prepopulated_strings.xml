@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="artichoke">Artichau</string>
+    <string name="asparagus">Asperge</string>
+    <string name="aubergine">Aubergine</string>
+    <string name="beans">Haricot</string>
+    <string name="beetroot">Betrave</string>
+    <string name="broccoli">Brocoli</string>
+    <string name="brussels_sprouts">Chou de Bruxelles</string>
+    <string name="butternut_squash">Courgette butternut</string>
+    <string name="carrot">Carotte</string>
+    <string name="cauliflower">Chou fleur</string>
+    <string name="celery">Celeri</string>
+    <string name="chard">Bette</string>
+    <string name="chilly">Piment</string>
+    <string name="courgette">Courgette</string>
+    <string name="cucumber">Concombre</string>
+    <string name="garlic">Ail</string>
+    <string name="leek">Poireau</string>
+    <string name="lettuce">Laittue</string>
+    <string name="onion">Oignon</string>
+    <string name="parsnip">Panet</string>
+    <string name="pea">Pois</string>
+    <string name="pepper">Poivron</string>
+    <string name="potato">Pomme de terre</string>
+    <string name="pumpkin">Citrouille</string>
+    <string name="radish">Radis</string>
+    <string name="shallot">Echalote</string>
+    <string name="tomato_green_house">Tomate (en serre)</string>
+    <string name="spinach_summer">Epinard (été)</string>
+    <string name="spinach_winter">Epinard (hiver)</string>
+    <string name="tomato_outdoors">Tomate (en extérieur)</string>
+
+    <string name="sow_indoors">Semer à l\'intérieur</string>
+    <string name="sow_outdoors">Semer à l\'extérieur</string>
+    <string name="harvest">Récolter</string>
+    <string name="plant_out">Repiquer</string>
+</resources>
