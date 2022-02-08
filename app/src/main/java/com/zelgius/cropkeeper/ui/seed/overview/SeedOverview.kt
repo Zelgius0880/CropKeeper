@@ -1,14 +1,5 @@
 package com.zelgius.cropkeeper.ui.seed.overview
 
-import androidx.activity.compose.BackHandler
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.twotone.Edit
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -32,14 +22,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -63,7 +49,6 @@ import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.Phase
 import com.zelgius.database.model.Vegetable
 import com.zelgius.mock.dao.FakeProvider
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -75,39 +60,15 @@ fun SeedOverview(
     viewModel: SeedOverviewViewModel = hiltViewModel()
 ) {
     val item by viewModel.item.collectAsState(initial = null)
-    var visible by remember {
-        mutableStateOf(false)
-    }
 
-    var triggerBack by remember {
-        mutableStateOf(false)
-    }
-
-    item?.let {
-        AnimatedVisibility(visible = visible, enter = slideInVertically {
-            it
-        },
-            exit = slideOutVertically { it }) {
+    Surface(Modifier.fillMaxSize()) {
+        item?.let {
             SeedOverview(item = it, viewModel = viewModel, navigator = navigator)
         }
-    }
-    BackHandler {
-        triggerBack = true
     }
 
     LaunchedEffect(key1 = uid) {
         viewModel.loadSeed(uid)
-        delay(20)
-        visible = true
-    }
-
-    // FIXME the navigation api for compose only support crossfade animation for now. THis little delay let another animation to trigger right after the crossfade
-    LaunchedEffect(key1 = triggerBack) {
-        if (triggerBack) {
-            visible = false
-            delay(20)
-            navigator.popBackStack()
-        }
     }
 }
 
@@ -199,8 +160,8 @@ private fun CardPhases(
     onPhaseSelected: (Phase) -> Unit
 ) {
     Card3(Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp, top = 8.dp)) {
-        Row (verticalAlignment = Alignment.CenterVertically){
-            VegetableImage(vegetable = vegetable,modifier = Modifier.padding(8.dp))
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            VegetableImage(vegetable = vegetable, modifier = Modifier.padding(8.dp))
 
             Column(
                 Modifier
@@ -268,15 +229,14 @@ fun SeedOverviewPreview() {
     val seed = runBlocking { FakeProvider.seedRepository.getAllFull().first() }
 
     AppTheme {
-        Surface {
-            SeedOverview(
-                item = seed,
-                viewModel = SeedOverviewViewModel(
-                    FakeProvider.seedRepository,
-                    FakeProvider.periodRepository,
-                    FakeProvider.periodHistoryRepository
-                )
+        SeedOverview(
+            item = seed,
+            viewModel = SeedOverviewViewModel(
+                FakeProvider.seedRepository,
+                FakeProvider.periodRepository,
+                FakeProvider.periodHistoryRepository
             )
-        }
+        )
+
     }
 }

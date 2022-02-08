@@ -73,6 +73,8 @@ dependencies {
     //For RangeSlider. The compose range slider is more limited in customization than the Android view
     implementation ("com.google.android.material:material:1.5.0")
 
+
+
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:${Versions.lifeCycle}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.lifeCycle}")
     implementation("androidx.compose.runtime:runtime-livedata:${Versions.compose}")
@@ -90,7 +92,9 @@ dependencies {
     implementation("org.burnoutcrew.composereorderable:reorderable:0.7.4")
 
 
-    //implementation( "com.google.accompanist:accompanist-navigation-animation:0.22.0-rc")
+    implementation( "com.google.accompanist:accompanist-navigation-animation:0.22.1-rc"){
+        because("moving to 0.24.x will force compose 1.2.x-alpha and this version of compose trigger a crash")
+    }
 
     testImplementation( "junit:junit:4.13.2")
     androidTestImplementation( "androidx.test.ext:junit:1.1.3")

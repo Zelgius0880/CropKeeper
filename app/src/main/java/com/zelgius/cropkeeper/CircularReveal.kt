@@ -1,9 +1,16 @@
 package com.zelgius.cropkeeper
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
@@ -12,6 +19,7 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
 import androidx.compose.ui.platform.debugInspectorInfo
@@ -65,6 +73,32 @@ fun Modifier.circularReveal(
 
         onDrawWithContent {
             clipPath(path) { this@onDrawWithContent.drawContent() }
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun CircularRevealEffect(
+    visible: Boolean,
+    color: Color = MaterialTheme.colorScheme.primaryContainer,
+    offset: Offset = Offset(0.5f, 0.5f),
+    content: @Composable () -> Unit
+) {
+
+    Surface(
+        Modifier
+            .circularReveal(visible, offset)
+            .fillMaxSize(),
+        color = color
+    ) {
+
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            content()
         }
     }
 }

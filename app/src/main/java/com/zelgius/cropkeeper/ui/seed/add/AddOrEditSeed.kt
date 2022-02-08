@@ -153,9 +153,31 @@ fun AddOrEditSeed(
         }
     }
 
+    val coroutineScope = rememberCoroutineScope()
     Surface(Modifier.fillMaxSize()) {
-        item?.let {
-            AddOrEditSeed(it, modifier, navigator, viewModel)
+        Column {
+            SmallTopAppBar(
+                title = {
+                    Text(text = item?.let { stringResource(id = if (it.isNew) R.string.new_seed else R.string.edit_seed) }
+                        ?: "")
+                },
+                actions = {
+                    IconButton(onClick = {
+                        coroutineScope.launch {
+                            viewModel.save().collect {
+                                navigator.popBackStack()
+                            }
+                        }
+                    }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_twotone_save_24),
+                            contentDescription = null
+                        )
+                    }
+                })
+            item?.let {
+                AddOrEditSeed(it, modifier, navigator, viewModel)
+            }
         }
     }
 }
@@ -188,122 +210,105 @@ fun AddOrEditSeed(
     val snackbarHostState by remember { mutableStateOf(SnackbarHostState()) }
 
     val coroutineScope = rememberCoroutineScope()
-    Column {
-        SmallTopAppBar(
-            title = { Text(text = stringResource(id = if (item.isNew) R.string.new_seed else R.string.edit_seed)) },
-            actions = {
-                IconButton(onClick = {
 
+    ModalBottomSheetLayout(
+        sheetState = bottomSheetState,
+        sheetShape = RoundedCornerShape(
+            topStart = 8.dp,
+            topEnd = 8.dp,
+            bottomEnd = 0.dp,
+            bottomStart = 0.dp
+        ),
+        sheetContent = {
+            Surface {
+                val snackbarText = stringResource(id = R.string.save_succeed)
+                AddOrEditVegetable(
+                    vegetableViewModel
+                ) {
                     coroutineScope.launch {
-                        viewModel.save().collect {
-                            navigator.popBackStack()
+                        bottomSheetState.hide()
+                        snackbarHostState.showSnackbar(
+                            snackbarText,
+                            null,
+                            duration = SnackbarDuration.Short
+                        )
+                    }
+
+                    viewModel.update(it)
+                }
+            }
+        },
+        sheetContentColor = MaterialTheme.colorScheme.surface
+    ) {
+        Box(modifier = modifier.fillMaxSize()) {
+            LazyColumn {
+                item {
+                    var vegetables by remember {
+                        mutableStateOf<List<Vegetable>>(emptyList())
+                    }
+
+                    LaunchedEffect(true) {
+                        viewModel.vegetables.collect {
+                            vegetables = it
                         }
                     }
-                }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_twotone_save_24),
-                        contentDescription = null
-                    )
-                }
-            })
-        ModalBottomSheetLayout(
-            sheetState = bottomSheetState,
-            sheetShape = RoundedCornerShape(
-                topStart = 8.dp,
-                topEnd = 8.dp,
-                bottomEnd = 0.dp,
-                bottomStart = 0.dp
-            ),
-            sheetContent = {
-                Surface {
-                    val snackbarText = stringResource(id = R.string.save_succeed)
-                    AddOrEditVegetable(
-                        vegetableViewModel
-                    ) {
-                        coroutineScope.launch {
-                            bottomSheetState.hide()
-                            snackbarHostState.showSnackbar(
-                                snackbarText,
-                                null,
-                                duration = SnackbarDuration.Short
-                            )
-                        }
 
-                        viewModel.update(it)
-                    }
-                }
-            },
-            sheetContentColor = MaterialTheme.colorScheme.surface
-        ) {
-            Box(modifier = modifier.fillMaxSize()) {
-                LazyColumn {
-                    item {
-                        var vegetables by remember {
-                            mutableStateOf<List<Vegetable>>(emptyList())
-                        }
-
-                        LaunchedEffect(true) {
-                            viewModel.vegetables.collect {
-                                vegetables = it
-                            }
-                        }
-
-                        val snackbarText = stringResource(id = R.string.item_deleted)
-                        val snackbarActionText = stringResource(id = R.string.undo)
-                        CardVegetable(
-                            isNew = item.isNew,
-                            vegetable = vegetable,
-                            startDate = item.seed.startDate,
-                            vegetables = vegetables,
-                            onActionSelected = {
-                                coroutineScope.launch {
-                                    when (it) {
-                                        Action.Add, Action.Edit -> {
-                                            if (it == Action.Add)
-                                                vegetableViewModel.reset()
-                                            else
-                                                vegetableViewModel.reset(vegetable, periods)
-                                            bottomSheetState.animateTo(
-                                                ModalBottomSheetValue.Expanded
-                                            )
-                                        }
-                                        Action.Delete -> viewModel.delete(vegetable).collect {
-                                            val response = snackbarHostState.showSnackbar(
-                                                snackbarText,
-                                                snackbarActionText,
-                                                duration = SnackbarDuration.Short
-                                            )
-                                            if (response == SnackbarResult.ActionPerformed) {
-                                                viewModel.undo(it.first, it.second)
-                                            }
+                    val snackbarText = stringResource(id = R.string.item_deleted)
+                    val snackbarActionText = stringResource(id = R.string.undo)
+                    CardVegetable(
+                        isNew = item.isNew,
+                        vegetable = vegetable,
+                        startDate = item.seed.startDate,
+                        vegetables = vegetables,
+                        onActionSelected = {
+                            coroutineScope.launch {
+                                when (it) {
+                                    Action.Add, Action.Edit -> {
+                                        if (it == Action.Add)
+                                            vegetableViewModel.reset()
+                                        else
+                                            vegetableViewModel.reset(vegetable, periods)
+                                        bottomSheetState.animateTo(
+                                            ModalBottomSheetValue.Expanded
+                                        )
+                                    }
+                                    Action.Delete -> viewModel.delete(vegetable).collect {
+                                        val response = snackbarHostState.showSnackbar(
+                                            snackbarText,
+                                            snackbarActionText,
+                                            duration = SnackbarDuration.Short
+                                        )
+                                        if (response == SnackbarResult.ActionPerformed) {
+                                            viewModel.undo(it.first, it.second)
                                         }
                                     }
                                 }
                             }
-                        ) {
-                            viewModel.update(it)
                         }
-                    }
-
-                    item {
-                        val phase by viewModel.actualPhaseFlow.collectAsState(initial = item.actualPeriod.phase)
-                        val phases by viewModel.phasesFlow.collectAsState(initial = emptyList())
-                        CardPhase(phases, phase) {
-                            viewModel.updateActualPhase(it)
-                        }
-                    }
-
-                    item {
-                        CardPeriod(periods)
+                    ) {
+                        viewModel.update(it)
                     }
                 }
-                SnackbarHost(
-                    hostState = snackbarHostState,
-                    modifier = Modifier.align(Alignment.BottomCenter)
-                )
+
+                item {
+                    val phase by viewModel.actualPhaseFlow.collectAsState(initial = item.actualPeriod.phase)
+                    val phases by viewModel.phasesFlow.collectAsState(initial = emptyList())
+                    CardPhase(phases, phase) {
+                        viewModel.updateActualPhase(it)
+                    }
+                }
+
+                item {
+                    CardPeriod(periods)
+                }
             }
+            SnackbarHost(
+                hostState = snackbarHostState,
+                modifier = Modifier.align(Alignment.BottomCenter)
+            )
         }
     }
+
 }
 
 

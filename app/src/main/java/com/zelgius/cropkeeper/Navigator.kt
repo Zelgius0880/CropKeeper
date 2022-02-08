@@ -1,21 +1,23 @@
 package com.zelgius.cropkeeper
 
 import androidx.navigation.NavController
+import com.zelgius.cropkeeper.routes.AddSeedRoute
+import com.zelgius.cropkeeper.routes.EditSeedRoute
+import com.zelgius.cropkeeper.routes.OverviewRoute
+import com.zelgius.cropkeeper.routes.Routes
 import com.zelgius.database.model.Seed
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
 
 class Navigator(private val navController: NavController? = null) {
     fun navigateToSeedOverview(seed: Seed) {
-        navController?.navigate("${Routes.SeedOverview.route}/${seed.seedUid}")
+        navController?.navigate(OverviewRoute.createRoute(seed))
     }
 
     fun navigateToEditSeed(seed: Seed) {
-        navController?.navigate("${Routes.AddOrEditSeed.route}/${seed.seedUid}")
+        navController?.navigate(EditSeedRoute.createRoute(seed))
     }
 
     fun navigateToAddSeed() {
-        navController?.navigate(Routes.AddOrEditSeed.route)
+        navController?.navigate(AddSeedRoute.route)
     }
 
     fun popBackStack() {
@@ -24,7 +26,3 @@ class Navigator(private val navController: NavController? = null) {
 }
 
 
-
-enum class Routes(val route: String){
-    AddOrEditSeed("edit_or_add"), Home("home"), SeedOverview("seed"),
-}
