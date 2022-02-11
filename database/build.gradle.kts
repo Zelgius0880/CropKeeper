@@ -13,7 +13,7 @@ android {
     compileSdk = 32
 
     defaultConfig {
-        minSdk = 26
+        minSdk = 31
         targetSdk = 32
 
         buildConfigField("int", "DATABASE_VERSION", "${Versions.databaseVersion}")

@@ -5,28 +5,21 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.navigation.NavBackStackEntry
-import com.zelgius.cropkeeper.routes.Routes.Companion.DEFAULT_DELAY
 
-object HomeRoute : Routes {
-    override val route: String = "home"
+object SettingsRoute : Routes {
+    override val route: String = "settings"
     @ExperimentalAnimationApi
     override fun popEnterTransition(scope: AnimatedContentScope<NavBackStackEntry>): EnterTransition =
         enterTransition(scope)
 
     @ExperimentalAnimationApi
     override fun enterTransition(scope: AnimatedContentScope<NavBackStackEntry>): EnterTransition =
-        with(scope) {
-            when (initialState.destination.route) {
-                OverviewRoute.route, AddSeedRoute.route -> fadeIn(tween(DEFAULT_DELAY))
-                else -> slideIntoContainer(
-                    AnimatedContentScope.SlideDirection.Left,
-                    animationSpec = tween(DEFAULT_DELAY)
-                )
-            }
-        }
+        scope.slideIntoContainer(
+            AnimatedContentScope.SlideDirection.Right,
+            animationSpec = tween(Routes.DEFAULT_DELAY)
+        )
 
     @ExperimentalAnimationApi
     override fun popExitTransition(scope: AnimatedContentScope<NavBackStackEntry>): ExitTransition =
@@ -34,5 +27,6 @@ object HomeRoute : Routes {
 
     @ExperimentalAnimationApi
     override fun exitTransition(scope: AnimatedContentScope<NavBackStackEntry>): ExitTransition =
-        fadeOut(tween(DEFAULT_DELAY))
+        fadeOut(tween(Routes.DEFAULT_DELAY))
+
 }

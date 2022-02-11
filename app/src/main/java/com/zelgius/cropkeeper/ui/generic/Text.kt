@@ -7,7 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -17,7 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.zelgius.cropkeeper.ui.legacy.Card3
 import com.zelgius.cropkeeper.ui.theme.AppTheme
 
 @Composable
@@ -57,6 +57,7 @@ fun TagText(
     )
 }
 
+@ExperimentalMaterial3Api
 @Preview
 @Composable
 fun TagTextPreview() {
@@ -67,7 +68,7 @@ fun TagTextPreview() {
 
         AppTheme(useDarkTheme = false) {
 
-            Card3() {
+            Card {
                 TagText(
                     "Test",
                     Modifier.padding(16.dp),
@@ -80,7 +81,7 @@ fun TagTextPreview() {
 
 
         AppTheme(useDarkTheme = true) {
-            Card3() {
+            Card {
                 TagText(
                     "Test",
                     Modifier.padding(16.dp),

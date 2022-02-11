@@ -1,8 +1,10 @@
 package com.zelgius.database.model
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
 import java.time.LocalDate
-import java.util.*
 
 @Entity(
     tableName = "period_history",
@@ -10,16 +12,21 @@ import java.util.*
         entity = Period::class,
         parentColumns = ["period_uid"],
         childColumns = ["period_uid"]
+    ), ForeignKey(
+        entity = Seed::class,
+        parentColumns = ["seed_uid"],
+        childColumns = ["seed_uid"]
     )],
-    indices = [Index("period_uid")]
+    indices = [Index("period_uid"), Index("seed_uid")],
+    primaryKeys = ["period_uid", "seed_uid"]
 )
 data class PeriodHistory(
-    @ColumnInfo(name = "period_history_uid")
-    @PrimaryKey val periodHistoryUid: String = UUID.randomUUID().toString(),
     @ColumnInfo(name = "start_date")
-    val startDate: LocalDate,
+    val startDate: LocalDate = LocalDate.now(),
     @ColumnInfo(name = "end_date")
-    val endDate: LocalDate,
+    val endDate: LocalDate? = null,
     @ColumnInfo(name = "period_uid")
-    val periodUid: String
+    val periodUid: String,
+    @ColumnInfo(name = "seed_uid")
+    val seedUid: String
 )

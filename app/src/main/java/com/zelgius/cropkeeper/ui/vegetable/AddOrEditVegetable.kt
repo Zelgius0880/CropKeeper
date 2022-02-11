@@ -1,9 +1,25 @@
 package com.zelgius.cropkeeper.ui.vegetable
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.with
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.KeyboardActions
@@ -15,8 +31,22 @@ import androidx.compose.material.icons.twotone.Add
 import androidx.compose.material.icons.twotone.Check
 import androidx.compose.material.icons.twotone.Close
 import androidx.compose.material.icons.twotone.Delete
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -41,7 +71,6 @@ import com.zelgius.database.model.Vegetable
 import com.zelgius.mock.dao.FakeProvider
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.burnoutcrew.reorderable.detectReorderAfterLongPress
 import org.burnoutcrew.reorderable.draggedItem
 import org.burnoutcrew.reorderable.rememberReorderState
@@ -245,9 +274,9 @@ fun PeriodEdition(
                 .fillMaxWidth(),
             inverted = inverted,
 
-        ){
-            if(!inverted) onPeriodRangeChange(it)
-            else onPeriodRangeChange(it.endInclusive .. it.start)
+            ) {
+            if (!inverted) onPeriodRangeChange(it)
+            else onPeriodRangeChange(it.endInclusive..it.start)
         }
     }
 }
@@ -268,29 +297,32 @@ private fun PeriodRange(
         Column(Modifier.align(Alignment.BottomCenter)) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             ) {
                 repeat(13) {
-                    //Box(contentAlignment = Alignment.Center, modifier = Modifier.weight(1f)) {
-                        Divider(
-                            Modifier
-                                .height(8.dp)
-                                .width(1.dp), thickness = 1.dp
-                        )
-                    //}
+                    Divider(
+                        Modifier
+                            .height(8.dp)
+                            .width(1.dp), thickness = 1.dp
+                    )
                 }
             }
 
             Row(
-                //horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
             ) {
                 repeat(12) {
                     Text(
                         text = MONTH_DATE_FORMATTER.format(LocalDate.now().withMonth(it + 1))
                             .substring(0..0).uppercase(Locale.getDefault()),
                         style = MaterialTheme.typography.labelMedium,
-                        modifier = Modifier.weight(1f).padding(start = 1.dp),
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 1.dp),
                         textAlign = TextAlign.Center
                     )
                 }
@@ -409,7 +441,10 @@ fun AddOrEditVegetablePreview() {
         Surface {
             AddOrEditVegetable(
                 viewModel = VegetableViewModel(
-                    FakeProvider.vegetableRepository, FakeProvider.phaseRepository, null
+                    FakeProvider.vegetableRepository,
+                    FakeProvider.periodRepository,
+                    FakeProvider.phaseRepository,
+                    null
                 )
             )
         }

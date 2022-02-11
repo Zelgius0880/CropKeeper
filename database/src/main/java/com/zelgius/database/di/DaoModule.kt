@@ -34,4 +34,8 @@ class DaoModule {
     @Singleton
     @Provides
     fun provideFullVegetableDao(db: AppDatabase): FullVegetableDao = db.fullVegetableDao()
+
+    @Singleton
+    @Provides
+    fun provideFullSeedDao(db: AppDatabase): FullSeedDao = db.fullSeedDao()
 }

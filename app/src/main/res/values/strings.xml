@@ -29,5 +29,15 @@
     <string name="undo">Undo</string>
     <string name="edit_seed">Edit seed</string>
     <string name="new_seed">New seed</string>
+    <string name="phases">Phases</string>
+    <string name="vegetables">Vegetables</string>
+    <string name="settings">Settings</string>
+    <string name="save">Save</string>
+    <string name="add_phase">Add phase</string>
+    <string name="edit_phase">Edit phase</string>
+    <string name="nothing_to_display">Nothing to display for the moment. \nCreate a new seed to see it in the list</string>
+    <string name="licenses">Licenses</string>
+    <string name="icon_licenses">Icon licences</string>
+    <string name="widget_description">Know when you need to sow your seeds</string>
 
 </resources>

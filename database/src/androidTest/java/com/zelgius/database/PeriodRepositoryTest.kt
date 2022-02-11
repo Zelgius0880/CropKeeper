@@ -1,20 +1,16 @@
 package com.zelgius.database
 
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zelgius.database.model.Period
 import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.PhaseRepository
 import com.zelgius.database.repository.VegetableRepository
 import kotlinx.coroutines.runBlocking
-
+import org.junit.Assert.assertArrayEquals
+import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import org.junit.Assert.*
-import org.junit.Before
-import java.time.LocalDate
-import java.time.ZoneId
 import kotlin.random.Random
 import kotlin.random.nextInt
 
@@ -29,12 +25,13 @@ class PeriodRepositoryTest : BaseTest() {
 
     @Before
     fun before() {
-        repository = PeriodRepository(periodDao)
+        repository = PeriodRepository(periodDao, periodHistoryDao, phaseDao)
+
         runBlocking {
-            val vegetableRepository = VegetableRepository(vegetableDao)
+            val vegetableRepository = VegetableRepository(vegetableDao,fullVegetableDao, seedDao, repository)
             vegetableRepository.insert(*VegetableRepositoryTest.SAMPLE)
 
-            val phaseRepository = PhaseRepository(phaseDao)
+            val phaseRepository = PhaseRepository(phaseDao, repository)
             phaseRepository.insert(*PhaseRepositoryTest.SAMPLE)
         }
     }
@@ -69,8 +66,8 @@ class PeriodRepositoryTest : BaseTest() {
             val updated =
                 SAMPLE.map {
                     it.copy(
-                        startingMonth = Random.nextInt(1..12),
-                        endingMonth = Random.nextInt(1..12)
+                        startingMonth = Random.nextInt(1..12).toFloat(),
+                        endingMonth = Random.nextInt(1..12).toFloat()
                     )
                 }
                     .toTypedArray()
@@ -87,22 +84,22 @@ class PeriodRepositoryTest : BaseTest() {
         private val phaseUids = PhaseRepositoryTest.SAMPLE.map { it.phaseUid }
         val SAMPLE = arrayOf(
             Period(
-                startingMonth = Random.nextInt(1..12),
-                endingMonth = Random.nextInt(1..12),
+                startingMonth = Random.nextInt(1..12).toFloat(),
+                endingMonth = Random.nextInt(1..12).toFloat(),
                 vegetableUid = vegetableUids.random(),
                 phaseUid = phaseUids.random(),
                 order = 1
             ),
             Period(
-                startingMonth = Random.nextInt(1..12),
-                endingMonth = Random.nextInt(1..12),
+                startingMonth = Random.nextInt(1..12).toFloat(),
+                endingMonth = Random.nextInt(1..12).toFloat(),
                 vegetableUid = vegetableUids.random(),
                 phaseUid = phaseUids.random(),
                 order = 2
             ),
             Period(
-                startingMonth = Random.nextInt(1..12),
-                endingMonth = Random.nextInt(1..12),
+                startingMonth = Random.nextInt(1..12).toFloat(),
+                endingMonth = Random.nextInt(1..12).toFloat(),
                 vegetableUid = vegetableUids.random(),
                 phaseUid = phaseUids.random(),
                 order = 3

@@ -38,16 +38,18 @@ class PeriodRepository @Inject constructor(
         with(periodDao.getPeriodWithHistory(periods.map { it.period.periodUid })) {
             coroutineScope {
                 map {
+                    val history = it.periodHistories.filter { h -> h.endDate != null }
                     PeriodWithPhaseAndHistory(phase = it.phase,
                         period = it.period,
-                        periodHistories = if (it.periodHistories.isNotEmpty()) {
+                        periodHistories = if (history.isNotEmpty()) {
                             listOf(
                                 PeriodHistory(
                                     startDate = LocalDate.now()
-                                        .withDayOfYear(it.periodHistories.sumOf { h -> h.startDate.dayOfYear } / it.periodHistories.size),
+                                        .withDayOfYear(history.sumOf { h -> h.startDate.dayOfYear } / it.periodHistories.size),
                                     endDate = LocalDate.now()
-                                        .withDayOfYear(it.periodHistories.sumOf { h -> h.endDate.dayOfYear } / it.periodHistories.size),
-                                    periodUid = it.period.periodUid
+                                        .withDayOfYear(history.sumOf { h -> h.endDate?.dayOfYear?: 0 } / it.periodHistories.size),
+                                    periodUid = it.period.periodUid,
+                                    seedUid = ""
                                 )
                             )
                         } else emptyList())
@@ -55,12 +57,22 @@ class PeriodRepository @Inject constructor(
             }
         }
 
-    suspend fun getPeriodsForVegetable(vegetable: Vegetable) = coroutineScope {
+    suspend fun get(uid: String) = periodDao.get(uid)
+
+    suspend fun getPeriodsForVegetable(vegetable: Vegetable) =
         periodDao.getPeriodsForVegetable(vegetable.vegetableUid).map {
             PeriodWithPhase(
                 period = it,
                 phase = phaseDao.get(it.phaseUid)
             )
         }
-    }
+
+    suspend fun getPeriodsForPhase(phase: Phase) =
+        periodDao.getPeriodsForPhase(phase.phaseUid).map {
+            PeriodWithPhase(
+                period = it,
+                phase = phaseDao.get(it.phaseUid)
+            )
+        }
+
 }

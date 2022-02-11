@@ -26,7 +26,9 @@ data class Seed(
     @ColumnInfo(name = "vegetable_uid")
     val vegetableUid: String,
     @ColumnInfo(name = "actual_period_uid")
-    val actualPeriodUid: String
+    val actualPeriodUid: String,
+    @ColumnInfo(name = "is_closed")
+    val isClosed: Boolean = false
 )
 
 data class SeedWithVegetable(

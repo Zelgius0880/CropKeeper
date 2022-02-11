@@ -5,14 +5,16 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Add
+import androidx.compose.material.icons.twotone.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SmallTopAppBar
@@ -21,9 +23,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
@@ -33,20 +35,28 @@ import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.zelgius.cropkeeper.routes.AddSeedRoute
 import com.zelgius.cropkeeper.routes.EditSeedRoute
 import com.zelgius.cropkeeper.routes.HomeRoute
+import com.zelgius.cropkeeper.routes.LicenceRoute
 import com.zelgius.cropkeeper.routes.OverviewRoute
 import com.zelgius.cropkeeper.routes.Routes
+import com.zelgius.cropkeeper.routes.SettingsRoute
 import com.zelgius.cropkeeper.ui.seed.add.AddSeed
 import com.zelgius.cropkeeper.ui.seed.add.EditSeed
 import com.zelgius.cropkeeper.ui.seed.list.SeedList
 import com.zelgius.cropkeeper.ui.seed.list.SeedListViewModel
 import com.zelgius.cropkeeper.ui.seed.overview.SeedOverview
+import com.zelgius.cropkeeper.ui.settings.IconLicense
+import com.zelgius.cropkeeper.ui.settings.Settings
 import com.zelgius.cropkeeper.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @OptIn(ExperimentalAnimationApi::class)
+    @OptIn(
+        ExperimentalAnimationApi::class, ExperimentalMaterialApi::class,
+        ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class,
+        ExperimentalMaterial3Api::class
+    )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -77,6 +87,14 @@ class MainActivity : ComponentActivity() {
                         }
                         routeComposable(route = AddSeedRoute) {
                             AddSeed(navigator = navigator)
+                        }
+
+                        routeComposable(route = SettingsRoute) {
+                            Settings(navigator = navigator)
+                        }
+
+                        routeComposable(LicenceRoute){
+                            IconLicense()
                         }
                     }
                 }
@@ -111,6 +129,11 @@ fun Home(navigator: Navigator, viewModel: SeedListViewModel = hiltViewModel()) {
                     color = MaterialTheme.colorScheme.onSurface
                 )
             },
+            actions = {
+                IconButton(onClick = { navigator.navigateToSettings() }) {
+                    Icon(Icons.TwoTone.Settings, null, tint = MaterialTheme.colorScheme.onSurface)
+                }
+            }
         )
     }, floatingActionButton = {
         FloatingActionButton(onClick = { navigator.navigateToAddSeed() }) {
@@ -128,10 +151,14 @@ fun Home(navigator: Navigator, viewModel: SeedListViewModel = hiltViewModel()) {
             SeedList(map = mapSeeds, onSeedClicked = {
                 navigator.navigateToSeedOverview(it.seed)
             }, onPhaseClicked = { item, phase ->
-
+                viewModel.setPhase(item, phase)
             }, onClose = {
-
-            })
+                viewModel.closeSeed(it)
+            },
+                onItemDelete = {
+                    viewModel.delete(it)
+                }
+            )
         }
 
     }

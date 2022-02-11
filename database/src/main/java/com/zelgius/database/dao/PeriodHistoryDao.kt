@@ -1,11 +1,12 @@
 package com.zelgius.database.dao
 
 import androidx.room.*
+import androidx.room.OnConflictStrategy.REPLACE
 import com.zelgius.database.model.*
 
 @Dao
 interface PeriodHistoryDao {
-    @Insert
+    @Insert(onConflict = REPLACE)
     suspend fun insert(vararg history: PeriodHistory)
 
     @Update
@@ -19,11 +20,8 @@ interface PeriodHistoryDao {
 
     @Query(
         "SELECT period_history.* FROM period_history " +
-                "JOIN period  ON period.period_uid = period_history.period_uid " +
-                "JOIN phase  ON phase.phase_uid = phase.phase_uid " +
-                "WHERE period.period_uid = :periodUid AND period_history.start_date LIKE '%'|:year  "
+                "WHERE period_history.period_uid = :periodUid AND period_history.start_date LIKE :year||'-%' AND end_date IS NOT NULL"
     )
-    @Transaction
     suspend fun getPeriodWithHistoryForYear(
         periodUid: String,
         year: Int

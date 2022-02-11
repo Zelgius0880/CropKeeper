@@ -37,9 +37,11 @@ interface PeriodDao {
     fun getHistoryYears(vegetableUid: String): List<Int>
 
 
-    @Query("SELECT period.* FROM period JOIN phase ON phase.phase_uid = period.phase_uid WHERE vegetable_uid = :vegetableUid  AND period.is_deleted = 0 ORDER BY `order`")
+    @Query("SELECT period.* FROM period JOIN phase ON phase.phase_uid = period.phase_uid WHERE vegetable_uid = :vegetableUid  ORDER BY `order`")
     suspend fun getPeriodsForVegetable(
         vegetableUid: String
     ): List<Period>
 
+    @Query("SELECT * FROM period WHERE phase_uid = :phaseUid")
+    suspend fun getPeriodsForPhase(phaseUid: String): List<Period>
 }

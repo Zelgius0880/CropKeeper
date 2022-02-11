@@ -1,15 +1,22 @@
 package com.zelgius.cropkeeper.ui.seed.add
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.zelgius.database.model.*
+import com.zelgius.database.model.FullSeed
+import com.zelgius.database.model.PeriodWithPhase
+import com.zelgius.database.model.Phase
+import com.zelgius.database.model.Seed
+import com.zelgius.database.model.Vegetable
 import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.SeedRepository
 import com.zelgius.database.repository.VegetableRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -46,21 +53,23 @@ class AddSeedViewModel @Inject constructor(
         val item = seed.first()
         val phase = actualPhaseFlow.first()
         val vegetable = vegetableFlow.first()
+        val actualPeriod = (periods.find { it.phase == phase }
+            ?: periods.first()).period
 
         seedRepository.insertOrUpdate(
             item.seed.copy(
-                startDate = LocalDate.now(),
+                startDate = if (item.isNew) LocalDate.now() else item.seed.startDate,
                 vegetableUid = vegetable.vegetableUid,
-                actualPeriodUid = (periods.find { it.phase == phase }
-                    ?: periods.first()).period.periodUid
-            )
+                actualPeriodUid = actualPeriod.periodUid
+            ),
+            actualPeriod = actualPeriod
         )
         emit(Unit)
     }
 
     val vegetables = vegetableRepository.getAll(application)
 
-    //Fixme I think it is better to use State instead of flows, but not really sure
+    //Fixme I think it is better to use State instead of flows
     private val _vegetableFlow = MutableStateFlow<Vegetable?>(null)
     val vegetableFlow: Flow<Vegetable>
         get() = _vegetableFlow.filterNotNull()
@@ -93,7 +102,6 @@ class AddSeedViewModel @Inject constructor(
     fun updateActualPhase(phase: Phase) {
         _actualPhaseFlow.value = phase
     }
-
 
     private fun emptySeed() = flow {
         val vegetable = vegetableRepository.getAll(application).first().first()

@@ -19,6 +19,23 @@
     <string name="my_seeds">Mes pousses</string>
     <string name="periods">Périodes</string>
     <string name="name">Nom</string>
+    <string name="name_cannot_be_empty">Le nom ne peut pas être vide</string>
+    <string name="periods_cannot_be_empty">Vous devez ajouter au moins une periode</string>
+    <string name="save_succeed">Elément enregistré</string>
+    <string name="item_deleted">Elément supprimé</string>
+    <string name="undo">Annuler</string>
+    <string name="edit_seed">Editer une pousse</string>
+    <string name="new_seed">Ajouter une pousse</string>
+    <string name="phases">Phases</string>
+    <string name="vegetables">Légumes</string>
+    <string name="settings">Paramètres</string>
+    <string name="save">Enregistrer</string>
+    <string name="add_phase">Ajouter une phase</string>
+    <string name="edit_phase">Editer la phase</string>
+    <string name="nothing_to_display">Aucune pousse à afficher pour le moment.\\nAjoutez un une nouvelle pour la voir dans la liste</string>
+    <string name="licenses">Licences</string>
+    <string name="icon_licenses">Licences des icones</string>
+    <string name="widget_description">Gardez à l\'oeil quand planter vos graines</string>
 
 
 </resources>

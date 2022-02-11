@@ -2,6 +2,7 @@ package com.zelgius.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zelgius.database.model.Phase
+import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.PhaseRepository
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert
@@ -20,7 +21,9 @@ class PhaseRepositoryTest : BaseTest() {
 
     @Before
     fun before() {
-        repository = PhaseRepository(phaseDao)
+        val periodRepository = PeriodRepository(periodDao, periodHistoryDao, phaseDao)
+
+        repository = PhaseRepository(phaseDao, periodRepository)
     }
 
     @Test
@@ -38,7 +41,7 @@ class PhaseRepositoryTest : BaseTest() {
         runBlocking {
             repository.insert(*SAMPLE)
 
-            repository.delete(*SAMPLE.sliceArray(0..1))
+            repository.delete(SAMPLE.first())
 
             val list = repository.getAll()
             Assert.assertTrue(list.size == 1)
@@ -60,6 +63,6 @@ class PhaseRepositoryTest : BaseTest() {
     }
 
     companion object {
-        val SAMPLE = arrayOf(Phase(name = "Phase 1", color = 0xFF), Phase(name = "Phase 2", color = 0xFF), Phase(name = "Phase 3", color = 0xFF))
+        val SAMPLE = arrayOf(Phase(name = "Phase 1", color = "#FFFFFF"), Phase(name = "Phase 2", color = "#FFFFFF"), Phase(name = "Phase 3", color = "#FFFFFF"))
     }
 }

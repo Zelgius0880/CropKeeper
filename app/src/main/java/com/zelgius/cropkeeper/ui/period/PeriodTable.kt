@@ -53,8 +53,8 @@ private const val HEADER_WIDTH = 100
 
 // FIXME On my Pixel 5 Api 32, the text does not want to wrap to a new line when too long. It works well on Emulator. So a dirty fix is to fix the height of the Text
 private val PHASE_NAME_HEIGHT
-@Composable
-get() =  LocalDensity.current.run {  60.sp.toDp() }
+    @Composable
+    get() = LocalDensity.current.run { 60.sp.toDp() }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -352,8 +352,8 @@ private fun ConstraintLayoutScope.periodBar(
     }
 }
 
-private fun LocalDate.toMonthPercent(): Float =
-    dayOfYear / Year.of(year).length().toFloat() * 12
+private fun LocalDate?.toMonthPercent(): Float =
+    if (this != null) dayOfYear / Year.of(year).length().toFloat() * 12 else 0f
 
 @Composable
 fun AdaptiveCellWidth(

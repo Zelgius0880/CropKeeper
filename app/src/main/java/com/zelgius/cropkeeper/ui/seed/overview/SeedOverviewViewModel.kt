@@ -1,11 +1,6 @@
 package com.zelgius.cropkeeper.ui.seed.overview
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.PeriodWithPhase
@@ -15,11 +10,11 @@ import com.zelgius.database.model.Vegetable
 import com.zelgius.database.repository.PeriodHistoryRepository
 import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.SeedRepository
-import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -60,7 +55,15 @@ class SeedOverviewViewModel @Inject constructor(
         get() = _actualPhase.filterNotNull()
 
     fun setPhase(phase: Phase) {
-        _actualPhase.value = phase
+        viewModelScope.launch {
+            val i = item.first()
+            seedRepository.updatePhase(i, phase)
+
+            _actualPhase.value = phase
+            _item.value =
+                i.copy(actualPeriod = i.periods.find { it.phase.phaseUid == phase.phaseUid }
+                    ?: i.periods.first())
+        }
     }
 
     suspend fun loadSeed(uid: String) {
@@ -69,7 +72,6 @@ class SeedOverviewViewModel @Inject constructor(
         }
         getPeriodWithoutHistory()
     }
-
 
     fun getPeriodWithoutHistory() {
         _item.value?.let {

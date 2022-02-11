@@ -22,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun periodDao(): PeriodDao
     abstract fun periodHistoryDao(): PeriodHistoryDao
     abstract fun fullVegetableDao(): FullVegetableDao
+    abstract fun fullSeedDao(): FullSeedDao
 }
 
 

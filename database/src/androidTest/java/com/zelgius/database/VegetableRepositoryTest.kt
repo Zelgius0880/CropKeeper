@@ -2,7 +2,9 @@ package com.zelgius.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zelgius.database.model.Vegetable
+import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.VegetableRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertTrue
@@ -21,7 +23,8 @@ class VegetableRepositoryTest : BaseTest() {
 
     @Before
     fun before() {
-        repository = VegetableRepository(vegetableDao)
+        val periodRepository = PeriodRepository(periodDao, periodHistoryDao, phaseDao)
+        repository = VegetableRepository(vegetableDao,fullVegetableDao,seedDao,periodRepository)
     }
 
     @Test
@@ -29,8 +32,8 @@ class VegetableRepositoryTest : BaseTest() {
         runBlocking {
             repository.insert(*SAMPLE)
             val list = repository.getAll()
-            assertTrue(list.isNotEmpty())
-            assertArrayEquals(list.toTypedArray(), SAMPLE)
+            assertTrue(list.first().isNotEmpty())
+            assertArrayEquals(list.first().toTypedArray(), SAMPLE)
         }
     }
 
@@ -42,7 +45,7 @@ class VegetableRepositoryTest : BaseTest() {
             repository.delete(*SAMPLE.sliceArray(0..1))
 
             val list = repository.getAll()
-            assertTrue(list.size == 1)
+            assertTrue(list.first().size == 1)
         }
     }
 
@@ -55,8 +58,8 @@ class VegetableRepositoryTest : BaseTest() {
             repository.update(*updated)
 
             val list = repository.getAll()
-            assertTrue(list.isNotEmpty())
-            assertArrayEquals(list.toTypedArray(), updated)
+            assertTrue(list.first().isNotEmpty())
+            assertArrayEquals(list.first().toTypedArray(), updated)
         }
     }
 

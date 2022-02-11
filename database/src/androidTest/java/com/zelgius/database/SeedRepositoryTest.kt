@@ -2,6 +2,7 @@ package com.zelgius.database
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.zelgius.database.model.Seed
+import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.SeedRepository
 import com.zelgius.database.repository.VegetableRepository
 import kotlinx.coroutines.runBlocking
@@ -24,9 +25,10 @@ class SeedRepositoryTest : BaseTest() {
 
     @Before
     fun before() {
-        repository = SeedRepository(seedDao)
+        val periodRepository = PeriodRepository(periodDao, periodHistoryDao, phaseDao)
+        repository = SeedRepository(seedDao, phaseDao, vegetableDao, periodRepository, fullSeedDao, periodHistoryDao)
         runBlocking {
-            val vegetableRepository = VegetableRepository(vegetableDao)
+            val vegetableRepository = VegetableRepository(vegetableDao,fullVegetableDao, seedDao, periodRepository)
             vegetableRepository.insert(*VegetableRepositoryTest.SAMPLE)
         }
     }
@@ -34,7 +36,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun insertAndGet() {
         runBlocking {
-            repository.insertOrUpdate(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE, actualPeriod = actualPeriod)
             val list = repository.getAll()
             assertTrue(list.isNotEmpty())
             assertArrayEquals(list.toTypedArray(), SAMPLE)
@@ -44,7 +46,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun delete() {
         runBlocking {
-            repository.insertOrUpdate(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE, actualPeriod = actualPeriod)
 
             repository.delete(*SAMPLE.sliceArray(0..1))
 
@@ -56,7 +58,7 @@ class SeedRepositoryTest : BaseTest() {
     @Test
     fun update() {
         runBlocking {
-            repository.insertOrUpdate(*SAMPLE)
+            repository.insertOrUpdate(*SAMPLE, actualPeriod = actualPeriod)
 
             val updated =
                 SAMPLE.map { it.copy(startDate = it.startDate.plusDays(Random.nextLong(10))) }
@@ -71,15 +73,19 @@ class SeedRepositoryTest : BaseTest() {
 
     companion object {
         private val vegetableUids = VegetableRepositoryTest.SAMPLE.map { it.vegetableUid }
+        private val actualPeriod = PeriodRepositoryTest.SAMPLE.first()
         val SAMPLE = arrayOf(
             Seed(
                 startDate = LocalDate.now(ZoneId.systemDefault()),
+                vegetableUid = vegetableUids.random(),
+                actualPeriodUid = actualPeriod.periodUid
+            ), Seed(
+                startDate = LocalDate.now(ZoneId.systemDefault()),
+                actualPeriodUid = actualPeriod.periodUid,
                 vegetableUid = vegetableUids.random()
             ), Seed(
                 startDate = LocalDate.now(ZoneId.systemDefault()),
-                vegetableUid = vegetableUids.random()
-            ), Seed(
-                startDate = LocalDate.now(ZoneId.systemDefault()),
+                actualPeriodUid = actualPeriod.periodUid,
                 vegetableUid = vegetableUids.random()
             )
         )

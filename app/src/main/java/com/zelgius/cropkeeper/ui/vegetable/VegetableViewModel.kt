@@ -1,22 +1,24 @@
 package com.zelgius.cropkeeper.ui.vegetable
 
 import android.app.Application
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.*
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.zelgius.database.model.Period
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.Phase
 import com.zelgius.database.model.Vegetable
+import com.zelgius.database.repository.PeriodRepository
 import com.zelgius.database.repository.PhaseRepository
 import com.zelgius.database.repository.VegetableRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import org.burnoutcrew.reorderable.move
 import javax.inject.Inject
@@ -24,7 +26,8 @@ import javax.inject.Inject
 @HiltViewModel
 class VegetableViewModel @Inject constructor(
     private val vegetableRepository: VegetableRepository,
-    private val phaseRepository: PhaseRepository,
+    private val periodRepository: PeriodRepository,
+    phaseRepository: PhaseRepository,
     private val application: Application?
 ) : ViewModel() {
 
@@ -75,7 +78,7 @@ class VegetableViewModel @Inject constructor(
             )
         )
 
-        periodRange = (1f..12f)
+        periodRange = (1f..13f)
         viewModelScope.launch {
             phase = phases.first().first()
         }
@@ -119,9 +122,17 @@ class VegetableViewModel @Inject constructor(
         emit(result)
     }
 
+    fun reset() = reset(Vegetable(name = ""), emptyList())
+    fun reset(vegetable: Vegetable) {
+        viewModelScope.launch {
+            val periods = periodRepository.getPeriodsForVegetable(vegetable)
+            reset(vegetable, periods)
+        }
+    }
+
     fun reset(
-        vegetable: Vegetable = Vegetable(name = ""),
-        periods: List<PeriodWithPhase> = emptyList()
+        vegetable: Vegetable ,
+        periods: List<PeriodWithPhase>
     ) {
         _errors.clear()
         this.vegetable.value = vegetable

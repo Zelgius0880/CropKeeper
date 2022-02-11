@@ -5,6 +5,7 @@ plugins {
     id ("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
+    id("com.google.android.gms.oss-licenses-plugin")
 }
 
 android {
@@ -12,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.zelgius.cropkeeper"
-        minSdk = 26
+        minSdk = 31
         targetSdk = 32
         versionCode  =1
         versionName  ="1.0"
@@ -62,9 +63,9 @@ dependencies {
     implementation( "androidx.core:core-ktx:1.7.0")
     implementation( "androidx.compose.ui:ui:${Versions.compose}")
     implementation( "androidx.compose.material:material:${Versions.compose}")
-    implementation("androidx.compose.material3:material3:1.0.0-alpha04")
+    implementation("androidx.compose.material3:material3:1.0.0-alpha05")
     implementation( "androidx.compose.ui:ui-tooling-preview:${Versions.compose}")
-    implementation( "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0")
+    implementation( "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1")
     implementation( "androidx.activity:activity-compose:1.4.0")
     implementation( project(":database"))
     implementation( project(":common"))
@@ -93,8 +94,10 @@ dependencies {
 
 
     implementation( "com.google.accompanist:accompanist-navigation-animation:0.22.1-rc"){
-        because("moving to 0.24.x will force compose 1.2.x-alpha and this version of compose trigger a crash")
+        because("moving to 0.24.x will force compose 1.2.x-alpha and this version of compose trigger a crash in the overview screen")
     }
+
+    implementation("com.google.android.gms:play-services-oss-licenses:17.0.0")
 
     testImplementation( "junit:junit:4.13.2")
     androidTestImplementation( "androidx.test.ext:junit:1.1.3")

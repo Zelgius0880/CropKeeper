@@ -1,7 +1,13 @@
 package com.zelgius.mock
 
-import android.graphics.Color
-import com.zelgius.database.model.*
+import com.zelgius.database.model.Period
+import com.zelgius.database.model.PeriodHistory
+import com.zelgius.database.model.PeriodWithPhase
+import com.zelgius.database.model.PeriodWithPhaseAndHistory
+import com.zelgius.database.model.Phase
+import com.zelgius.database.model.Seed
+import com.zelgius.database.model.SeedWithVegetableAndPeriod
+import com.zelgius.database.model.Vegetable
 import java.time.LocalDate
 import java.util.*
 import kotlin.random.Random
@@ -65,7 +71,8 @@ val periodSampleWithPhaseAndHistorySample = periodSample.map {
                     .withYear(yearsSample[index]),
                 endDate = LocalDate.now().withMonth(Random.nextInt(1, 12))
                     .withYear(yearsSample[index]),
-                periodUid = it.period.periodUid
+                periodUid = it.period.periodUid,
+                seedUid = ""
             )
         }
     )

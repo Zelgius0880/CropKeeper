@@ -2,7 +2,6 @@ package com.zelgius.mock.dao
 
 import com.zelgius.database.dao.PeriodDao
 import com.zelgius.database.model.Period
-import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.PeriodWithPhaseAndHistory
 import com.zelgius.mock.periodSample
 import com.zelgius.mock.periodSampleWithPhaseAndHistorySample
@@ -31,5 +30,8 @@ class FakePeriodDao : PeriodDao {
 
     override suspend fun getPeriodsForVegetable(vegetableUid: String): List<Period> =
         periodSample.filter { it.period.vegetableUid == vegetableUid }.map { it.period }
+
+    override suspend fun getPeriodsForPhase(phaseUid: String): List<Period> =
+        periodSample.filter { it.phase.phaseUid == phaseUid }.map { it.period }
 
 }

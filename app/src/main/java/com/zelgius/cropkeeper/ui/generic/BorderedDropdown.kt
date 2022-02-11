@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.*
@@ -73,7 +72,7 @@ fun <T> BorderedDropdown(
 
         if (expanded) {
             val popupWidth = 200.dp
-            val popupHeight = dropDownHeight?: 250.dp
+            val popupHeight = dropDownHeight ?: 250.dp
             val cornerSize = 16.dp
 
             Popup(alignment = Alignment.TopStart, onDismissRequest = { expanded = false }) {
@@ -85,16 +84,16 @@ fun <T> BorderedDropdown(
                 ) {
                     LazyColumn {
                         items(items) { item ->
-                            DropdownMenuItem(onClick = {
-                                expanded = false
-                                onItemSelected(item)
-                            }) {
-
-                                Text(
-                                    text = formatting?.invoke(item) ?: item.toString(),
-                                    color = contentColorFor(backgroundColor = MaterialTheme.colorScheme.surface)
-                                )
-                            }
+                            DropdownMenuItem(
+                                onClick = {
+                                    expanded = false
+                                    onItemSelected(item)
+                                },
+                                text = {
+                                    Text(
+                                        text = formatting?.invoke(item) ?: item.toString()
+                                    )
+                                })
                         }
                     }
                 }
@@ -102,3 +101,4 @@ fun <T> BorderedDropdown(
         }
     }
 }
+

@@ -35,7 +35,8 @@ interface SeedDao {
     @Query(
         "SELECT * FROM seed " +
                 "JOIN vegetable ON vegetable.vegetable_uid = seed.vegetable_uid " +
-                "JOIN period ON period.period_uid = seed.actual_period_uid "
+                "JOIN period ON period.period_uid = seed.actual_period_uid " +
+                "WHERE is_closed = 0"
     )
     fun getAllFullFlow(): Flow<List<SeedWithVegetableAndPeriod>>
 
@@ -48,4 +49,5 @@ interface SeedDao {
         "SELECT * FROM seed WHERE seed.vegetable_uid = :vegetableUid"
     )
     suspend fun getForVegetable(vegetableUid: String): List<Seed>
+
 }

@@ -17,4 +17,7 @@ abstract class BaseTest {
     val vegetableDao by lazy { db.vegetableDao() }
     val phaseDao by lazy { db.phaseDao() }
     val seedDao by lazy { db.seedDao() }
+    val periodHistoryDao by lazy { db.periodHistoryDao() }
+    val fullSeedDao by lazy { db.fullSeedDao() }
+    val fullVegetableDao by lazy { db.fullVegetableDao() }
 }

@@ -6,30 +6,28 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.rememberModalBottomSheetState
-import androidx.compose.material.ModalBottomSheetValue
-import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.SnackbarResult
+import androidx.compose.material.ModalBottomSheetLayout
+import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.rememberModalBottomSheetState
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
@@ -58,7 +56,6 @@ import com.zelgius.cropkeeper.CircularRevealEffect
 import com.zelgius.cropkeeper.Navigator
 import com.zelgius.cropkeeper.R
 import com.zelgius.cropkeeper.ui.Action
-import com.zelgius.cropkeeper.ui.legacy.Card3
 import com.zelgius.cropkeeper.ui.period.PeriodList
 import com.zelgius.cropkeeper.ui.phase.PhaseTagList
 import com.zelgius.cropkeeper.ui.theme.AppTheme
@@ -66,7 +63,6 @@ import com.zelgius.cropkeeper.ui.vegetable.AddOrEditVegetable
 import com.zelgius.cropkeeper.ui.vegetable.VegetableDropdown
 import com.zelgius.cropkeeper.ui.vegetable.VegetableImage
 import com.zelgius.cropkeeper.ui.vegetable.VegetableViewModel
-import com.zelgius.cropkeeper.ui.vegetable.drawable
 import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.Phase
@@ -176,7 +172,7 @@ fun AddOrEditSeed(
                     }
                 })
             item?.let {
-                AddOrEditSeed(it, modifier, navigator, viewModel)
+                AddOrEditSeed(it, modifier, viewModel)
             }
         }
     }
@@ -185,13 +181,13 @@ fun AddOrEditSeed(
 
 @OptIn(
     ExperimentalMaterialApi::class, ExperimentalAnimationApi::class,
-    ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class
+    ExperimentalFoundationApi::class, ExperimentalComposeUiApi::class,
+    ExperimentalMaterial3Api::class
 )
 @Composable
 fun AddOrEditSeed(
     item: FullSeed,
     modifier: Modifier = Modifier,
-    navigator: Navigator = Navigator(),
     viewModel: AddSeedViewModel
 ) {
     val vegetable by viewModel.vegetableFlow.collectAsState(initial = item.vegetable)
@@ -313,6 +309,7 @@ fun AddOrEditSeed(
 
 
 @Composable
+@ExperimentalMaterial3Api
 fun CardVegetable(
     vegetable: Vegetable,
     isNew: Boolean,
@@ -321,7 +318,7 @@ fun CardVegetable(
     onActionSelected: (Action) -> Unit,
     onVegetableSelected: (Vegetable) -> Unit
 ) {
-    Card3(
+    Card(
         Modifier
             .padding(horizontal = 8.dp)
             .padding(top = 8.dp, bottom = 4.dp)
@@ -380,8 +377,9 @@ fun CardVegetable(
 }
 
 @Composable
+@ExperimentalMaterial3Api
 fun CardPhase(phases: List<Phase>, phase: Phase, onPhaseSelected: (Phase) -> Unit) {
-    Card3(
+    Card(
         Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Column(
@@ -408,8 +406,9 @@ fun CardPhase(phases: List<Phase>, phase: Phase, onPhaseSelected: (Phase) -> Uni
 }
 
 @Composable
+@ExperimentalMaterial3Api
 fun CardPeriod(periods: List<PeriodWithPhase>, modifier: Modifier = Modifier) {
-    Card3(
+    Card(
         modifier
             .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
@@ -421,7 +420,6 @@ fun CardPeriod(periods: List<PeriodWithPhase>, modifier: Modifier = Modifier) {
 @Composable
 fun AddOrEditSeedPreview() {
     AppTheme(false) {
-        val item = runBlocking { FakeProvider.seedRepository.getAllFull().first() }
         AddOrEditSeed(
             viewModel = AddSeedViewModel(
                 FakeProvider.vegetableRepository,
@@ -435,6 +433,7 @@ fun AddOrEditSeedPreview() {
 
 @Preview
 @Composable
+@ExperimentalMaterial3Api
 fun CardVegetablePreview() {
     AppTheme(false) {
         val item = runBlocking { FakeProvider.seedRepository.getAllFull().first() }
@@ -455,6 +454,7 @@ fun CardVegetablePreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CardPhasePreview() {
@@ -464,6 +464,7 @@ fun CardPhasePreview() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CardPeriodPreview() {

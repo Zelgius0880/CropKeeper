@@ -12,6 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.twotone.Edit
+import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SmallTopAppBar
@@ -39,7 +41,6 @@ import com.zelgius.cropkeeper.ui.history.HistoryDropdown
 import com.zelgius.cropkeeper.ui.history.HistoryItem
 import com.zelgius.cropkeeper.ui.history.NoneItem
 import com.zelgius.cropkeeper.ui.history.YearItem
-import com.zelgius.cropkeeper.ui.legacy.Card3
 import com.zelgius.cropkeeper.ui.period.PeriodListWithHistory
 import com.zelgius.cropkeeper.ui.phase.PhaseTagList
 import com.zelgius.cropkeeper.ui.theme.AppTheme
@@ -54,6 +55,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 @Composable
+@ExperimentalMaterial3Api
 fun SeedOverview(
     uid: String,
     navigator: Navigator = Navigator(),
@@ -73,6 +75,7 @@ fun SeedOverview(
 }
 
 @Composable
+@ExperimentalMaterial3Api
 fun SeedOverview(
     item: FullSeed,
     navigator: Navigator = Navigator(),
@@ -140,7 +143,7 @@ fun SeedOverview(
                 }
 
                 item {
-                    Card3(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+                    Card(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
                         Column {
                             PeriodListWithHistory(periods = periods, lazy = false)
                         }
@@ -152,6 +155,7 @@ fun SeedOverview(
 }
 
 @Composable
+@ExperimentalMaterial3Api
 private fun CardPhases(
     vegetable: Vegetable,
     phases: List<Phase>,
@@ -159,7 +163,7 @@ private fun CardPhases(
     actualPhase: Phase,
     onPhaseSelected: (Phase) -> Unit
 ) {
-    Card3(Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp, top = 8.dp)) {
+    Card(Modifier.padding(start = 8.dp, end = 8.dp, bottom = 4.dp, top = 8.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             VegetableImage(vegetable = vegetable, modifier = Modifier.padding(8.dp))
 
@@ -193,6 +197,7 @@ private fun CardPhases(
 }
 
 @Composable
+@ExperimentalMaterial3Api
 private fun CardHistory(
     viewModel: SeedOverviewViewModel,
     item: FullSeed,
@@ -201,7 +206,7 @@ private fun CardHistory(
 
     val years by viewModel.getYears(item.vegetable).collectAsState(initial = emptyList())
 
-    Card3(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
+    Card(Modifier.padding(horizontal = 8.dp, vertical = 4.dp)) {
         Row(
             Modifier
                 .padding(8.dp)
@@ -223,6 +228,7 @@ private fun CardHistory(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun SeedOverviewPreview() {
