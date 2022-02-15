@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Widget.CropKeeper.AppWidget.Container" parent="android:Widget">
+        <item name="android:id">@android:id/background</item>
+        <item name="android:background">#FF1a1c18</item>
+        <item name="android:textColor">#FFe3e3dc</item>
+    </style>
+
+</resources>

@@ -7,5 +7,5 @@ object Versions {
     const val kotlin = "1.6.0"
     const val lifeCycle ="2.4.1"
 
-    const val databaseVersion = 1
+    const val databaseVersion = 2
 }

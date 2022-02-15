@@ -35,6 +35,7 @@ data class Period(
     val phaseUid: String,
     @ColumnInfo(name = "vegetable_uid")
     val vegetableUid: String
+
 )
 
 data class PeriodWithPhase(

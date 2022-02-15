@@ -4,6 +4,8 @@
     <style name="Theme.CropKeeper" parent="Theme.Material3.DayNight">
         <item name="colorPrimary">#85000000</item>
         <item name="colorOnPrimary">#85ffffff</item>
+        <item name="colorSurface">#FFfdfdf6</item>
+        <item name="colorOnSurface">#FF1a1c18</item>
     </style>
 
 </resources>

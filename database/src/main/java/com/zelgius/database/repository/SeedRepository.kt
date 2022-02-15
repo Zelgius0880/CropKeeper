@@ -1,5 +1,6 @@
 package com.zelgius.database.repository
 
+import com.zelgius.database.SeedGroup
 import com.zelgius.database.dao.FullSeedDao
 import com.zelgius.database.dao.PeriodHistoryDao
 import com.zelgius.database.dao.PhaseDao
@@ -14,6 +15,7 @@ import com.zelgius.database.model.Seed
 import com.zelgius.database.model.SeedWithVegetableAndPeriod
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import java.time.LocalDate
 import javax.inject.Inject
 
 class SeedRepository @Inject constructor(
@@ -53,6 +55,28 @@ class SeedRepository @Inject constructor(
         list.map { createFullSeed(it) }
     }
 
+    fun getGroupedFullSeeds() = getAllFullFlow().map { list ->
+        val now = LocalDate.now()
+        val currentMonth = now.month.value
+        list.groupBy {
+            val start = it.actualPeriod.period.startingMonth
+            val end = it.actualPeriod.period.endingMonth
+            val phases = it.periods.map { p -> p.phase }
+            if (currentMonth.toFloat() in start..end)
+                SeedGroup.Actual
+            else if (phases.indexOf(it.actualPeriod.phase) != phases.size - 1) {
+                SeedGroup.Planned
+            } else {
+                SeedGroup.Ended
+            }
+        }.toSortedMap { o1, o2 -> o1.order - o2.order }
+    }
+
+    suspend fun updatePhase(itemUid: String, phaseUid: String) =
+        getFull(itemUid)?.let {
+            updatePhase(it, phaseDao.get(phaseUid))
+        }
+
     suspend fun updatePhase(item: FullSeed, phase: Phase) {
         val indexOfPrevious =
             item.periods.indexOfFirst { it.phase.phaseUid == item.actualPeriod.phase.phaseUid }
@@ -72,6 +96,11 @@ class SeedRepository @Inject constructor(
         )
     }
 
+    suspend fun closeSeed(itemUid: String) {
+        getFull(itemUid)?.let {
+            fullSeedDao.close(it)
+        }
+    }
     suspend fun closeSeed(item: FullSeed) {
         fullSeedDao.close(item)
     }

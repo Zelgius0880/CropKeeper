@@ -13,7 +13,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class AppModule {
+object AppModule {
     @Singleton
     @Provides
     fun provideDatabase(
@@ -22,5 +22,8 @@ class AppModule {
         app,
         AppDatabase::class.java,
         "crop_keeper_db"
-    ).createFromAsset("initial_db.db").build()
+    )
+        .createFromAsset("initial_db.db")
+        .fallbackToDestructiveMigration()
+        .build()
 }

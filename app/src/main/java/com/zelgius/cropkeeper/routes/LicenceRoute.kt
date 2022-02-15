@@ -7,7 +7,7 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.navigation.NavBackStackEntry
 
 object LicenceRoute : Routes {
-    override val route: String = "add"
+    override val route: String = "licence"
     @ExperimentalAnimationApi
     override fun popEnterTransition(scope: AnimatedContentScope<NavBackStackEntry>): EnterTransition =
         EnterTransition.None

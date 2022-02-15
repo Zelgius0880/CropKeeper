@@ -1,7 +1,9 @@
 package com.zelgius.cropkeeper.ui.seed.overview
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zelgius.cropkeeper.WidgetHelper
 import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.PeriodWithPhaseAndHistory
@@ -23,7 +25,8 @@ import javax.inject.Inject
 class SeedOverviewViewModel @Inject constructor(
     private val seedRepository: SeedRepository,
     private val periodRepository: PeriodRepository,
-    private val periodHistoryRepository: PeriodHistoryRepository
+    private val periodHistoryRepository: PeriodHistoryRepository,
+    private val application: Application? = null
 ) : ViewModel() {
     fun getYears(vegetable: Vegetable) = flow {
         emit(periodHistoryRepository.getYears(vegetable))
@@ -63,6 +66,10 @@ class SeedOverviewViewModel @Inject constructor(
             _item.value =
                 i.copy(actualPeriod = i.periods.find { it.phase.phaseUid == phase.phaseUid }
                     ?: i.periods.first())
+
+            application?.let {
+                WidgetHelper.update(it)
+            }
         }
     }
 

@@ -39,5 +39,6 @@
     <string name="licenses">Licenses</string>
     <string name="icon_licenses">Icon licences</string>
     <string name="widget_description">Know when you need to sow your seeds</string>
+    <string name="nb_days">%d days</string>
 
 </resources>

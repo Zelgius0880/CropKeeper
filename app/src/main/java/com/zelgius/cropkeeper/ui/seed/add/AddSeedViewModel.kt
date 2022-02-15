@@ -3,6 +3,7 @@ package com.zelgius.cropkeeper.ui.seed.add
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.zelgius.cropkeeper.WidgetHelper
 import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.PeriodWithPhase
 import com.zelgius.database.model.Phase
@@ -64,6 +65,11 @@ class AddSeedViewModel @Inject constructor(
             ),
             actualPeriod = actualPeriod
         )
+
+        application?.let {
+            WidgetHelper.update(it)
+        }
+
         emit(Unit)
     }
 

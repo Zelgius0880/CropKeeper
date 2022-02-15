@@ -51,6 +51,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.zelgius.cropkeeper.R
 import com.zelgius.cropkeeper.ui.phase.PhaseTagList
+import com.zelgius.database.SeedGroup
 import com.zelgius.cropkeeper.ui.theme.AppTheme
 import com.zelgius.cropkeeper.ui.vegetable.VegetableImage
 import com.zelgius.cropkeeper.ui.vegetable.string
@@ -68,7 +69,7 @@ import java.time.format.DateTimeFormatter
 )
 @Composable
 fun SeedList(
-    map: Map<SeedListSeparator, List<FullSeed>>,
+    map: Map<SeedGroup, List<FullSeed>>,
     modifier: Modifier = Modifier,
     onSeedClicked: (FullSeed) -> Unit,
     onPhaseClicked: (FullSeed, Phase) -> Unit,
@@ -122,14 +123,14 @@ fun SeedList(
                         }
                     }, key = {
                         when (it) {
-                            is SeedListSeparator -> it.name
+                            is SeedGroup -> it.name
                             is FullSeed -> it.seed.seedUid
                             else -> ""
                         }
                     }) {
                         Box(modifier = Modifier.animateItemPlacement()) {
                             when (it) {
-                                is SeedListSeparator -> SeedSeparator(it)
+                                is SeedGroup -> SeedSeparator(it)
                                 is FullSeed -> cell(it)
                             }
                         }
@@ -141,16 +142,16 @@ fun SeedList(
 }
 
 @Composable
-fun SeedSeparator(separator: SeedListSeparator) {
+fun SeedSeparator(separator: SeedGroup) {
     Text(
         modifier = Modifier
             .padding(horizontal = 8.dp)
             .padding(top = 16.dp),
         text = stringResource(
             id = when (separator) {
-                SeedListSeparator.Actual -> R.string.actual
-                SeedListSeparator.Planned -> R.string.planned
-                SeedListSeparator.Ended -> R.string.ended
+                SeedGroup.Actual -> R.string.actual
+                SeedGroup.Planned -> R.string.planned
+                SeedGroup.Ended -> R.string.ended
             }
         ),
         color = MaterialTheme.colorScheme.onSurface,
@@ -255,6 +256,8 @@ fun LazyItemScope.SeedCell(
                 var actualPhase by remember {
                     mutableStateOf(item.actualPeriod.phase)
                 }
+
+                actualPhase = item.actualPeriod.phase
 
                 Box(
                     Modifier
@@ -448,11 +451,11 @@ fun SeedListPreview() {
             val end = it.actualPeriod.period.endingMonth
             val phases = it.periods.map { p -> p.phase }
             if (currentMonth.toFloat() in start..end)
-                SeedListSeparator.Actual
+                SeedGroup.Actual
             else if (phases.indexOf(it.actualPeriod.phase) != phases.size - 1) {
-                SeedListSeparator.Planned
+                SeedGroup.Planned
             } else {
-                SeedListSeparator.Ended
+                SeedGroup.Ended
             }
         }.toSortedMap { o1, o2 -> o1.order - o2.order }
     }

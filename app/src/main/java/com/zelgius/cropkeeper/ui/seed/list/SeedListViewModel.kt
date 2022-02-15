@@ -1,8 +1,10 @@
 package com.zelgius.cropkeeper.ui.seed.list
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.zelgius.cropkeeper.WidgetHelper
 import com.zelgius.database.model.FullSeed
 import com.zelgius.database.model.Phase
 import com.zelgius.database.repository.SeedRepository
@@ -14,28 +16,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SeedListViewModel @Inject constructor(
-    private val seedRepository: SeedRepository
+    private val seedRepository: SeedRepository,
+    private val application: Application? = null
 ) : ViewModel() {
-    val seedsMap = seedRepository.getAllFullFlow().map { list ->
-        val now = LocalDate.now()
-        val currentMonth = now.month.value
-        list.groupBy {
-            val start = it.actualPeriod.period.startingMonth
-            val end = it.actualPeriod.period.endingMonth
-            val phases = it.periods.map { p -> p.phase }
-            if (currentMonth.toFloat() in start..end)
-                SeedListSeparator.Actual
-            else if (phases.indexOf(it.actualPeriod.phase) != phases.size - 1) {
-                SeedListSeparator.Planned
-            } else {
-                SeedListSeparator.Ended
-            }
-        }.toSortedMap { o1, o2 -> o1.order - o2.order }
-    }.asLiveData()
+    val seedsMap get() = seedRepository.getGroupedFullSeeds().asLiveData()
 
     fun setPhase(item: FullSeed, phase: Phase) {
         viewModelScope.launch {
             seedRepository.updatePhase(item, phase)
+            application?.let {
+                WidgetHelper.update(it)
+            }
         }
     }
 
@@ -52,6 +43,3 @@ class SeedListViewModel @Inject constructor(
     }
 }
 
-enum class SeedListSeparator(val order: Int) {
-    Actual(1), Planned(2), Ended(0)
-}
