@@ -10,11 +10,11 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    namespace = "com.zelgius.cropkeeper.database"
+   compileSdk = 32
 
     defaultConfig {
         minSdk = 31
-        targetSdk = 32
 
         buildConfigField("int", "DATABASE_VERSION", "${Versions.databaseVersion}")
 

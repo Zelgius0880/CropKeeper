@@ -3,7 +3,7 @@ package com.zelgius.cropkeeper.di
 import android.content.Context
 import androidx.room.Room
 import com.zelgius.database.AppDatabase
-import com.zelgius.database.BuildConfig
+import com.zelgius.cropkeeper.database.BuildConfig
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

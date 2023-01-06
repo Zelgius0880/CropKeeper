@@ -4,6 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverter
 import androidx.room.TypeConverters
+import com.zelgius.cropkeeper.database.BuildConfig
 import com.zelgius.database.dao.*
 import com.zelgius.database.model.*
 import java.time.LocalDate
